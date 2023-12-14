@@ -1,42 +1,63 @@
-import { Component } from "react";
-import css from './Form.module.css'
+import css from './Form.module.css';
+import { useState } from 'react';
 
-export class Form extends Component {
-    state = {
-        name: '',
-        number: '',
-    }
+export const Form = ({ onCreateContact }) => {
+  const [name, setName] = useState('');
+  const [number, setNumber] = useState('');
 
-    handleChange = ({target:{value,name}}) => {    
-        this.setState({ [name]: value })      
+  const handleChange = evt => {
+    const { name, value } = evt.currentTarget;
+    switch (name) {
+      case 'name':
+        setName(value);
+        break;
+      case 'number':
+        setNumber(value);
+        break;
+      default:
+        break;
     }
-    
-    handleSubmit = (e) => {
-        e.preventDefault();
-        this.props.onCreateContact(this.state)
-        this.reset();
-    }
+  };
 
-    reset = () =>
-        this.setState({
-            name: '',
-            number: '',
-        })
-    
-    render() {
-        const { name, number } = this.state;
-        
-        return (
-            <form className={css.form} onSubmit={this.handleSubmit}>
-                <label>Name <br />
-                    <input className={css.input} type="text" name="name" value={name} required onChange={this.handleChange}/>
-                </label>
-                <label>Phone number <br />
-                    <input className={css.input} type="tel" name="number" value={number} required onChange={this.handleChange}/>
-                </label>
-                <button className={css.button } type="submit">Add contact</button>
-            </form>
-        )
-    }
+  const handleSubmit = e => {
+    e.preventDefault();
+    const contact = { name, number };
+    onCreateContact(contact);
+    reset();
+  };
 
-}
+  const reset = () => {
+    setName('');
+    setNumber('');
+  };
+
+  return (
+    <form className={css.form} onSubmit={handleSubmit}>
+      <label>
+        Name <br />
+        <input
+          className={css.input}
+          type="text"
+          name="name"
+          value={name}
+          required
+          onChange={handleChange}
+        />
+      </label>
+      <label>
+        Phone number <br />
+        <input
+          className={css.input}
+          type="tel"
+          name="number"
+          value={number}
+          required
+          onChange={handleChange}
+        />
+      </label>
+      <button className={css.button} type="submit">
+        Add contact
+      </button>
+    </form>
+  );
+};
