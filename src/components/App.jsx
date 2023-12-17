@@ -14,21 +14,13 @@ const defoltContacts = [
 ];
 
 export const App = () => {
-  const [contacts, setContacts] = useState(defoltContacts);
+  const [contacts, setContacts] = useState(
+    () => JSON.parse(window.localStorage.getItem('contacts')) ?? defoltContacts
+  );
   const [filter, setFilter] = useState('');
 
   useEffect(() => {
-    const localContacts = JSON.parse(localStorage.getItem('contacts'));
-    if (localContacts && localContacts.length > 0) {
-      setContacts(localContacts);
-    } else {
-      setContacts(defoltContacts);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (contacts.length !== defoltContacts.length)
-      localStorage.setItem('contacts', JSON.stringify(contacts));
+    window.localStorage.setItem('contacts', JSON.stringify(contacts));
   }, [contacts]);
 
   const onCreateContact = contacts => {
